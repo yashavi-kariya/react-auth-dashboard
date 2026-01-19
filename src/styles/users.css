@@ -1,0 +1,79 @@
+/* Main container */
+.users-page {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    font-family: Arial, sans-serif;
+}
+
+/* Box container */
+.users-box {
+    width: 500px;
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(239, 234, 234, 0.1);
+}
+
+/* Heading */
+.users-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1e3edf;
+}
+
+/* Refresh button */
+.refresh-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.refresh-btn:hover {
+    background-color: #45a049;
+}
+
+/* Loading & error messages */
+.users-box p {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Users list container */
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Individual user card */
+.user-card {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: 0.3s;
+}
+
+.user-card:hover {
+    background-color: #f1f1f1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* User details */
+.user-card p {
+    margin: 5px 0;
+}
+
+.user-card strong {
+    color: #555;
+}

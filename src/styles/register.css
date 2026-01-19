@@ -1,0 +1,28 @@
+.register {
+    min-height: 90vh;
+    background: linear-gradient(120deg, #85a5d8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-box {
+    background: white;
+    padding: 30px;
+    width: 380px;
+    border-radius: 10px;
+}
+
+.register-box input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+
+.register-box button {
+    width: 100%;
+    padding: 10px;
+    background: #1938d4;
+    color: white;
+    border: none;
+}

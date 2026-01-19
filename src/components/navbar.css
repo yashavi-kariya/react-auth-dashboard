@@ -1,0 +1,27 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #224db4;
+    padding: 15px 40px;
+}
+
+.logo {
+    color: floralwhite;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-link {
+    color: #cbd5f5;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.nav-link.active {
+    color: burlywood;
+    border-bottom: 2px solid bisque;
+}
