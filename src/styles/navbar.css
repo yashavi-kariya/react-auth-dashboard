@@ -2,12 +2,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #224db4;
+    background: #1e40af;
     padding: 15px 40px;
+    color: #fff;
 }
 
 .logo {
-    color: floralwhite;
+    font-weight: bold;
+    font-size: 22px;
 }
 
 .nav-links {
@@ -18,10 +20,11 @@
 .nav-link {
     color: #cbd5f5;
     text-decoration: none;
-    font-size: 16px;
+    font-weight: 500;
 }
 
+.nav-link:hover,
 .nav-link.active {
-    color: burlywood;
-    border-bottom: 2px solid bisque;
+    color: #fbbf24;
+    border-bottom: 2px solid #fbbf24;
 }

@@ -1,31 +1,42 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import About from "./pages/About";
-import Users from "./pages/Users";
-
-import ProtectedRoute from "./components/ProtectedRoute";
+import AdminDashboard from "./pages/AdminDashboard";
+import UserDashboard from "./pages/UserDashboard";
 
 function App() {
   const token = localStorage.getItem("token");
+  let role = null;
+
+  if (token) {
+    try {
+      // Safely decode the token payload (middle part of the JWT)
+      const payloadBase64 = token.split('.')[1];
+      const payload = JSON.parse(atob(payloadBase64));
+      role = payload.role;
+    } catch (e) {
+      console.error("Failed to decode token:", e);
+      localStorage.removeItem("token"); // Clear bad token
+    }
+  }
 
   return (
     <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/auth/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+
       <Route
-        path="/"
-        element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
+        path="/admin"
+        element={token && role === "admin" ? <AdminDashboard /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/user"
+        element={token && role === "user" ? <UserDashboard /> : <Navigate to="/login" />}
       />
 
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-
-      <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/users" element={<Users />} />
-      </Route>
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }

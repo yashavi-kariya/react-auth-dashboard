@@ -1,68 +1,99 @@
-import { useNavigate } from "react-router-dom";
-import "../styles/register.css";
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "../styles/login.css"; // Reuse existing login styles for consistency
 
 const Register = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [role, setRole] = useState("user");
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({ name: "", email: "", password: "" });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+    const handleRegister = async () => {
+        if (!username || !password) {
+            return alert("Please fill in all fields.");
+        }
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+        try {
+            // *** UNCOMMENT AND USE THIS FETCH REQUEST ***
+            const res = await fetch("http://localhost:5000/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, role }),
+            });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
-        setSuccess("");
-
-        setTimeout(() => {
-            // get users from localStorage
-            const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-            // check duplicate email
-            if (users.find(u => u.email === form.email)) {
-                setError("Email already exists");
-                setLoading(false);
+            // Handle potential 404 Not Found errors from the server
+            if (res.status === 404) {
+                alert("API Endpoint Not Found (404). Check your backend server URL.");
                 return;
             }
 
-            // save new user
-            const newUser = { id: Date.now(), name: form.name, email: form.email };
-            users.push(newUser);
-            localStorage.setItem("users", JSON.stringify(users));
+            const data = await res.json();
 
-            setSuccess("Registration successful");
-            setForm({ name: "", email: "", password: "" });
+            if (res.ok) {
+                alert("Registration successful! You can now log in.");
+                navigate("/login");
+            } else {
+                // Display error messages from the backend (e.g., "Username already exists")
+                alert(data.message || "Registration failed.");
+            }
 
-            setTimeout(() => {
-                navigate("/users"); // redirect to users page
-            }, 2000);
-
-            setLoading(false);
-        }, 1000);
+        } catch (error) {
+            // Handle network errors (e.g., backend server is offline)
+            console.error("Network error during registration:", error);
+            alert("Could not connect to the server. Is the backend running on port 5000?");
+        }
     };
 
     return (
-        <div className="register">
-            <div className="register-box">
-                <h2>Register</h2>
-                <form onSubmit={handleSubmit}>
-                    <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-                    <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-                    <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+        <div className="auth-container">
+            <div className="auth-box">
+                {/* ... (rest of your UI code is the same) ... */}
+                <h2 className="auth-title">Create Account</h2>
+                <p className="auth-subtitle">Join our platform today.</p>
 
-                    {error && <p style={{ color: "red" }}>{error}</p>}
-                    {success && <p style={{ color: "green" }}>{success}</p>}
+                <div className="input-group">
+                    <label htmlFor="username">Username</label>
+                    <input
+                        id="username"
+                        placeholder="Enter your username"
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="auth-input"
+                        required
+                    />
+                </div>
 
-                    <button type="submit" disabled={loading}>
-                        {loading ? "Registering..." : "Create Account"}
-                    </button>
-                </form>
+                <div className="input-group">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        id="password"
+                        type="password"
+                        placeholder="Enter a secure password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="auth-input"
+                        required
+                    />
+                </div>
+
+                <div className="input-group">
+                    <label htmlFor="role-select">Select Role (Admin Only)</label>
+                    <select
+                        id="role-select"
+                        onChange={(e) => setRole(e.target.value)}
+                        className="auth-select"
+                        value={role}
+                    >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <button onClick={handleRegister} className="auth-button">
+                    Register Now
+                </button>
+
+                <p className="auth-footer-text">
+                    Already have an account? <Link to="/login" className="auth-link">Login here</Link>
+                </p>
             </div>
         </div>
     );

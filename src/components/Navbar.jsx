@@ -1,9 +1,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import "./navbar.css";
+import "../styles/navbar.css";
 
 const Navbar = () => {
     const navigate = useNavigate();
-
     const logout = () => {
         localStorage.removeItem("token");
         navigate("/login");
@@ -11,32 +10,12 @@ const Navbar = () => {
 
     return (
         <nav className="navbar">
-            <h2 className="logo">My App</h2>
-
+            <h2 className="logo">ProApp</h2>
             <div className="nav-links">
-                <NavLink to="/dashboard" className="nav-link">
-                    Dashboard
-                </NavLink>
-
-                <NavLink to="/users" className="nav-link">
-                    Users
-                </NavLink>
-
-                <NavLink to="/about" className="nav-link">
-                    About
-                </NavLink>
-
-                <NavLink to="/register" className="nav-link">
-                    Register
-                </NavLink>
-
-                <span
-                    className="nav-link"
-                    style={{ cursor: "pointer" }}
-                    onClick={logout}
-                >
-                    Logout
-                </span>
+                <NavLink to="/" className="nav-link">Home</NavLink>
+                <NavLink to="/register" className="nav-link">Register</NavLink>
+                <NavLink to="/login" className="nav-link">Login</NavLink>
+                <span className="nav-link" onClick={logout}>Logout</span>
             </div>
         </nav>
     );

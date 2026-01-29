@@ -1,18 +1,13 @@
-import { Navigate, Outlet } from "react-router-dom";
-import Navbar from "./Navbar";
-import { isLoggedIn } from "../utils/auth";
+import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = () => {
-    if (!isLoggedIn()) {
-        return <Navigate to="/login" replace />;
-    }
+const ProtectedRoute = ({ children, role }) => {
+    const token = localStorage.getItem("token");
+    const userRole = localStorage.getItem("role");
 
-    return (
-        <>
-            <Navbar />
-            <Outlet />
-        </>
-    );
+    if (!token) return <Navigate to="/login" />; // not logged in
+    if (role && userRole !== role) return <Navigate to="/login" />; // wrong role
+
+    return children;
 };
 
 export default ProtectedRoute;
