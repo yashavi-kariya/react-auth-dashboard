@@ -1,0 +1,201 @@
+/* Update the Root Variables to match the new theme */
+:root {
+    --primary: #007bff;
+    /* Use professional blue for accents/active states */
+    --bg: rgb(210, 195, 229);
+    /* Use light purple/grey mix for main background */
+    --sidebar: #d3d3d3;
+    /* Light grey sidebar background */
+    --text: #2b3674;
+    /* Main text color */
+    --text-muted: #475569;
+    /* Muted text color for inactive buttons */
+    --card-bg: white;
+    /* Keep cards white for contrast */
+}
+
+.dashboard-layout {
+    display: flex;
+    height: 100vh;
+    background: var(--bg);
+    /* Main application background */
+    font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 280px;
+    background: var(--sidebar);
+    /* Light grey sidebar */
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    border-right: 1px solid #be84db;
+    /* Border color from your previous theme */
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    color: var(--text);
+    /* Match text color for "NexusTask" */
+    margin-bottom: 3rem;
+}
+
+.logo-icon {
+    background: purple;
+    /* Blue logo icon */
+    color: white;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.sidebar-menu {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-menu button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    border-radius: 12px;
+    color: var(--text-muted);
+    /* Inactive button color */
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.sidebar-menu button.active {
+    background: grey;
+    /* Active state background (Blue) */
+    color: white;
+}
+
+.sidebar-logout {
+    border: none;
+    background: #fff1f1;
+    color: #ff5b5b;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card-bg);
+    padding: 6px 16px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.user-badge img {
+    width: 32px;
+    border-radius: 50%;
+}
+
+/* Tasks UI */
+.task-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2rem;
+}
+
+.task-input-group input {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid #e0e5f2;
+    border-radius: 15px;
+    outline: none;
+}
+
+.task-input-group button {
+    background: var(--primary);
+    /* Blue button */
+    color: white;
+    border: none;
+    width: 50px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.task-card {
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    transition: 0.2s;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.task-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--primary);
+    /* Blue checkbox border */
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.task-card.done {
+    opacity: 0.6;
+}
+
+.task-card.done span {
+    text-decoration: line-through;
+}
+
+.delete-icon {
+    color: #ff5b5b;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}

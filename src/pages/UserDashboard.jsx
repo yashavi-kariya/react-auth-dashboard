@@ -1,152 +1,115 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import "../styles/dashboard.css";
-
-// Helper function to simulate getting logged-in user info from storage
-const getLoggedInUserInfo = () => {
-    const token = localStorage.getItem('token');
-    if (token === 'admin_token_xyz') {
-        return { username: 'Admin User', role: 'admin' };
-    } else if (token === 'user_token_abc') {
-        return { username: 'Standard User', role: 'user' };
-    }
-    return { username: 'Guest', role: 'user' };
-};
-
-// --- NEW TASK MANAGEMENT LOGIC ---
-const getUserTasksFromStorage = () => {
-    const tasksJson = localStorage.getItem('user_tasks');
-    return tasksJson ? JSON.parse(tasksJson) : [
-        { id: 't1', text: 'Complete React dashboard updates', completed: false },
-        { id: 't2', text: 'Attend team meeting', completed: false },
-        { id: 't3', text: 'Submit expense report', completed: true },
-    ];
-};
-
-const saveUserTasksToStorage = (tasks) => {
-    localStorage.setItem('user_tasks', JSON.stringify(tasks));
-};
-// ----------------------------------
+import { LayoutDashboard, CheckSquare, Settings, LogOut, Plus, Trash2, User } from "lucide-react";
+import "../styles/UserDashboard.css";
 
 
 const UserDashboard = () => {
     const navigate = useNavigate();
-    const [userInfo, setUserInfo] = useState(getLoggedInUserInfo());
+    const [userInfo, setUserInfo] = useState({ username: 'Standard User', role: 'user' });
     const [activeTab, setActiveTab] = useState('profile');
-
-    // --- NEW TASK MANAGEMENT STATE ---
-    const [tasks, setTasks] = useState(getUserTasksFromStorage());
+    const [tasks, setTasks] = useState(() => {
+        const saved = localStorage.getItem('user_tasks');
+        return saved ? JSON.parse(saved) : [];
+    });
     const [newTaskText, setNewTaskText] = useState('');
 
-    // Sync tasks with localStorage
     useEffect(() => {
-        saveUserTasksToStorage(tasks);
+        localStorage.setItem('user_tasks', JSON.stringify(tasks));
     }, [tasks]);
 
-    // Add Task Function
     const handleAddTask = (e) => {
         e.preventDefault();
         if (!newTaskText.trim()) return;
-        const newTask = {
-            id: Date.now().toString(),
-            text: newTaskText,
-            completed: false,
-        };
-        setTasks([...tasks, newTask]);
+        setTasks([{ id: Date.now().toString(), text: newTaskText, completed: false }, ...tasks]);
         setNewTaskText('');
     };
 
-    // Delete Task Function
-    const handleDeleteTask = (taskId) => {
-        setTasks(tasks.filter(task => task.id !== taskId));
+    const toggleTask = (id) => {
+        setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
     };
-    // ----------------------------------
-
 
     const logout = () => {
-        localStorage.removeItem("token");
+        localStorage.clear();
         navigate("/login");
     };
+    useEffect(() => {
+        // Sync theme with localStorage on mount
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+    }, []);
 
-    const renderContent = () => {
-        switch (activeTab) {
-            case 'tasks':
-                return (
-                    <div className="tab-content">
-                        <h2>My Tasks</h2>
-                        <form onSubmit={handleAddTask} className="add-user-form">
-                            <input
-                                type="text"
-                                placeholder="Add a new task..."
-                                value={newTaskText}
-                                onChange={(e) => setNewTaskText(e.target.value)}
-                                required
-                            />
-                            <button type="submit">Add Task</button>
-                        </form>
-                        <p>You have {tasks.filter(t => !t.completed).length} outstanding tasks:</p>
-                        <ul className="user-list">
-                            {tasks.map((task) => (
-                                <li key={task.id} style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
-                                    {task.text}
-                                    <button onClick={() => handleDeleteTask(task.id)} className="delete-btn">
-                                        Delete
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                );
-            case 'settings':
-                return (
-                    <div className="tab-content">
-                        <h2>Settings</h2>
-                        <p>Change your preferences here.</p>
-                    </div>
-                );
-            case 'profile':
-            default:
-                return (
-                    <div className="tab-content">
-                        <h2>Welcome, {userInfo.username}!</h2>
-                        <p>Role: {userInfo.role}</p>
-                        <p>This is your personalized profile overview.</p>
-                    </div>
-                );
-        }
-    };
 
     return (
-        <div className="dashboard">
-            <header className="dashboard-header">
-                <h1>User Dashboard</h1>
-                <button className="logout-btn" onClick={logout}>Logout</button>
-            </header>
+        <div className="dashboard-layout">
+            {/* SIDEBAR */}
+            <aside className="sidebar">
+                <div className="sidebar-logo">
+                    <div className="logo-icon">N</div>
+                    <span>Nexus<b>Task</b></span>
+                </div>
 
-            <nav className="dashboard-nav">
-                <button
-                    onClick={() => setActiveTab('profile')}
-                    className={activeTab === 'profile' ? 'active' : ''}
-                >
-                    My Profile
-                </button>
-                <button
-                    onClick={() => setActiveTab('tasks')}
-                    className={activeTab === 'tasks' ? 'active' : ''}
-                >
-                    My Tasks
-                </button>
-                <button
-                    onClick={() => setActiveTab('settings')}
-                    className={activeTab === 'settings' ? 'active' : ''}
-                >
-                    Settings
-                </button>
-            </nav>
+                <nav className="sidebar-menu">
+                    <button className={activeTab === 'profile' ? 'active' : ''} onClick={() => setActiveTab('profile')}>
+                        <User size={20} /> Profile
+                    </button>
+                    <button className={activeTab === 'tasks' ? 'active' : ''} onClick={() => setActiveTab('tasks')}>
+                        <CheckSquare size={20} /> My Tasks
+                    </button>
+                    <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>
+                        <Settings size={20} /> Settings
+                    </button>
+                </nav>
 
-            <div className="dashboard-content">
-                {renderContent()}
-            </div>
+                <button className="sidebar-logout" onClick={logout}>
+                    <LogOut size={20} /> Logout
+                </button>
+            </aside>
+
+            {/* MAIN CONTENT */}
+            <main className="main-content">
+                <header className="top-bar">
+                    <h1>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
+                    <div className="user-badge">
+                        {/* <img src={`https://ui-avatars.com{userInfo.username}&background=random`} alt="avatar" /> */}
+                        <span>{userInfo.username}</span>
+                    </div>
+                </header>
+
+                <div className="content-area">
+                    {activeTab === 'tasks' ? (
+                        <div className="tasks-container">
+                            <form onSubmit={handleAddTask} className="task-input-group">
+                                <input
+                                    value={newTaskText}
+                                    onChange={(e) => setNewTaskText(e.target.value)}
+                                    placeholder="Add a new goal..."
+                                />
+                                <button type="submit"><Plus size={20} /></button>
+                            </form>
+
+                            <div className="task-list">
+                                {tasks.map(task => (
+                                    <div key={task.id} className={`task-card ${task.completed ? 'done' : ''}`}>
+                                        <div className="task-info" onClick={() => toggleTask(task.id)}>
+                                            <div className="checkbox">{task.completed && "✓"}</div>
+                                            <span>{task.text}</span>
+                                        </div>
+                                        <button className="delete-icon" onClick={() => setTasks(tasks.filter(t => t.id !== task.id))}>
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="glass-card placeholder-view">
+                            <h3>{activeTab} view coming soon</h3>
+                            <p>We are still polishing this module for you.</p>
+                        </div>
+                    )}
+                </div>
+            </main>
         </div>
     );
 };
